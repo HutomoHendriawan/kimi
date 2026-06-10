@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from "react";
-import { Play, Pause, SkipBack, SkipForward, Square, Volume2, Music } from "lucide-react";
+import { useState, useRef, useEffect } from 'react';
+import { Play, Pause, SkipBack, SkipForward, Square, Volume2, Music } from 'lucide-react';
 
 interface Song {
   title: string;
@@ -10,19 +10,19 @@ interface Song {
 // Default royalty-free romantic songs (using placeholder URLs - replace with actual songs)
 const defaultSongs: Song[] = [
   {
-    title: "Romantic Piano",
-    artist: "Instrumental",
-    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    title: 'You Are Gonna Live Forever in Me',
+    artist: 'John Mayer',
+    url: 'https://jumpshare.com/share/6GZwFb6zzkr8cbfGqnQE',
   },
   {
-    title: "Sweet Melody",
-    artist: "Instrumental",
-    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+    title: 'More Than Words',
+    artist: 'Extreme',
+    url: 'https://jumpshare.com/share/sLayPRSihli8rcaVHfQg',
   },
   {
-    title: "Love Theme",
-    artist: "Instrumental",
-    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+    title: 'After Midnight',
+    artist: 'Blink-182',
+    url: 'https://jumpshare.com/share/G7bVQ9PIynv6V11lq99M',
   },
 ];
 
@@ -51,14 +51,14 @@ export default function MusicPlayer() {
     const updateDuration = () => setDuration(audio.duration);
     const handleEnded = () => handleNext();
 
-    audio.addEventListener("timeupdate", updateTime);
-    audio.addEventListener("loadedmetadata", updateDuration);
-    audio.addEventListener("ended", handleEnded);
+    audio.addEventListener('timeupdate', updateTime);
+    audio.addEventListener('loadedmetadata', updateDuration);
+    audio.addEventListener('ended', handleEnded);
 
     return () => {
-      audio.removeEventListener("timeupdate", updateTime);
-      audio.removeEventListener("loadedmetadata", updateDuration);
-      audio.removeEventListener("ended", handleEnded);
+      audio.removeEventListener('timeupdate', updateTime);
+      audio.removeEventListener('loadedmetadata', updateDuration);
+      audio.removeEventListener('ended', handleEnded);
     };
   }, [currentSongIndex]);
 
@@ -107,10 +107,10 @@ export default function MusicPlayer() {
   };
 
   const formatTime = (time: number) => {
-    if (isNaN(time)) return "0:00";
+    if (isNaN(time)) return '0:00';
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
   return (
@@ -124,11 +124,7 @@ export default function MusicPlayer() {
           className="fixed bottom-4 right-4 z-50 w-12 h-12 rounded-full bg-gradient-to-r from-pink-400 to-rose-500 text-white shadow-lg hover:shadow-xl flex items-center justify-center transition-all hover:scale-110"
           title="Open Music Player"
         >
-          {isPlaying ? (
-            <Music size={20} className="animate-pulse" />
-          ) : (
-            <Music size={20} />
-          )}
+          {isPlaying ? <Music size={20} className="animate-pulse" /> : <Music size={20} />}
         </button>
       ) : (
         /* Expanded Player */
@@ -141,10 +137,7 @@ export default function MusicPlayer() {
               </div>
               <span className="text-xs font-medium text-gray-500">Music Player</span>
             </div>
-            <button
-              onClick={() => setIsMinimized(true)}
-              className="text-gray-400 hover:text-gray-600 text-xs transition-colors"
-            >
+            <button onClick={() => setIsMinimized(true)} className="text-gray-400 hover:text-gray-600 text-xs transition-colors">
               Minimize
             </button>
           </div>
@@ -181,35 +174,23 @@ export default function MusicPlayer() {
 
           {/* Controls */}
           <div className="flex items-center justify-center gap-3 mb-3">
-            <button
-              onClick={handlePrev}
-              className="w-9 h-9 rounded-full bg-pink-100 hover:bg-pink-200 flex items-center justify-center text-pink-600 transition-colors"
-              title="Previous"
-            >
+            <button onClick={handlePrev} className="w-9 h-9 rounded-full bg-pink-100 hover:bg-pink-200 flex items-center justify-center text-pink-600 transition-colors" title="Previous">
               <SkipBack size={16} />
             </button>
 
-            <button
-              onClick={handleStop}
-              className="w-9 h-9 rounded-full bg-pink-100 hover:bg-pink-200 flex items-center justify-center text-pink-600 transition-colors"
-              title="Stop"
-            >
+            <button onClick={handleStop} className="w-9 h-9 rounded-full bg-pink-100 hover:bg-pink-200 flex items-center justify-center text-pink-600 transition-colors" title="Stop">
               <Square size={14} />
             </button>
 
             <button
               onClick={togglePlay}
               className="w-12 h-12 rounded-full bg-gradient-to-r from-pink-400 to-rose-500 hover:from-pink-500 hover:to-rose-600 flex items-center justify-center text-white shadow-lg transition-all hover:scale-105"
-              title={isPlaying ? "Pause" : "Play"}
+              title={isPlaying ? 'Pause' : 'Play'}
             >
               {isPlaying ? <Pause size={20} /> : <Play size={20} className="ml-0.5" />}
             </button>
 
-            <button
-              onClick={handleNext}
-              className="w-9 h-9 rounded-full bg-pink-100 hover:bg-pink-200 flex items-center justify-center text-pink-600 transition-colors"
-              title="Next"
-            >
+            <button onClick={handleNext} className="w-9 h-9 rounded-full bg-pink-100 hover:bg-pink-200 flex items-center justify-center text-pink-600 transition-colors" title="Next">
               <SkipForward size={16} />
             </button>
           </div>
@@ -246,9 +227,7 @@ export default function MusicPlayer() {
                     }, 100);
                   }}
                   className={`w-full text-left px-2 py-1.5 rounded-lg text-xs transition-colors ${
-                    currentSongIndex === index
-                      ? "bg-pink-100 text-pink-700 font-medium"
-                      : "text-gray-600 hover:bg-gray-50"
+                    currentSongIndex === index ? 'bg-pink-100 text-pink-700 font-medium' : 'text-gray-600 hover:bg-gray-50'
                   }`}
                 >
                   {index + 1}. {song.title}

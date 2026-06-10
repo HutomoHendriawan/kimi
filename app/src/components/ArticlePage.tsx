@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { Heart, ArrowRight, Feather } from "lucide-react";
-import { articleContent } from "@/data/content";
+import { useState, useEffect } from 'react';
+import { Heart, ArrowRight, Feather } from 'lucide-react';
+import { articleContent } from '@/data/content';
 
 interface ArticlePageProps {
   onNext: () => void;
@@ -40,11 +40,7 @@ export default function ArticlePage({ onNext }: ArticlePageProps) {
         </div>
       ))}
 
-      <div
-        className={`max-w-2xl mx-auto relative z-10 transition-all duration-700 ${
-          showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-        }`}
-      >
+      <div className={`max-w-2xl mx-auto relative z-10 transition-all duration-700 ${showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         {/* Article Card */}
         <div className="bg-white/95 backdrop-blur-lg rounded-3xl shadow-xl border border-pink-200/50 overflow-hidden">
           {/* Header */}
@@ -64,10 +60,7 @@ export default function ArticlePage({ onNext }: ArticlePageProps) {
               ))}
             </div>
             <Feather size={36} className="mx-auto text-white/90 mb-3 relative z-10" />
-            <h1
-              className="text-2xl md:text-3xl font-bold text-white relative z-10"
-              style={{ fontFamily: "'Playfair Display', serif" }}
-            >
+            <h1 className="text-2xl md:text-3xl font-bold text-white relative z-10" style={{ fontFamily: "'Playfair Display', serif" }}>
               {articleContent.title}
             </h1>
           </div>
@@ -91,10 +84,7 @@ export default function ArticlePage({ onNext }: ArticlePageProps) {
             {/* Closing */}
             <div className="mt-10 pt-6 border-t border-pink-100 text-center">
               <p className="text-gray-600 italic mb-2">{articleContent.closing}</p>
-              <p
-                className="text-xl font-bold text-pink-600"
-                style={{ fontFamily: "'Playfair Display', serif" }}
-              >
+              <p className="text-xl font-bold text-pink-600" style={{ fontFamily: "'Playfair Display', serif" }}>
                 {articleContent.signature}
               </p>
             </div>
@@ -103,11 +93,8 @@ export default function ArticlePage({ onNext }: ArticlePageProps) {
 
         {/* Next Button */}
         <div className="text-center mt-8">
-          <button
-            onClick={onNext}
-            className="btn-romantic px-8 py-3 rounded-2xl font-semibold inline-flex items-center gap-2 shadow-lg"
-          >
-            Lanjutkan
+          <button onClick={onNext} className="btn-romantic px-8 py-3 rounded-2xl font-semibold inline-flex items-center gap-2 shadow-lg">
+            Cantiknya gak bosenin
             <ArrowRight size={18} />
           </button>
         </div>
