@@ -91,7 +91,7 @@ export default function ContentPage({ onNext }: ContentPageProps) {
         {/* Next Button */}
         <div className="text-center">
           <button onClick={onNext} className="btn-romantic px-8 py-3 rounded-2xl font-semibold inline-flex items-center gap-2 shadow-lg">
-            Lanjutkan
+            Please Listen
             <ArrowRight size={18} />
           </button>
         </div>

@@ -51,8 +51,8 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
     const jitterX = (Math.random() - 0.5) * 12;
     const jitterY = (Math.random() - 0.5) * 10;
 
-    const limitX = 220; // batas gerak horizontal lebih lebar
-    const limitY = 90; // batas gerak vertikal tetap aman
+    const limitX = 420; // batas gerak horizontal lebih lebar
+    const limitY = 160; // batas gerak vertikal tetap aman
 
     setNoButtonOffset((prev) => {
       let nextX = prev.x + dx * moveStep * intensity + jitterX;
