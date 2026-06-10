@@ -5,14 +5,19 @@ interface WelcomePageProps {
   onYes: () => void;
 }
 
+type NoButtonPos = {
+  x: number;
+  y: number;
+};
+
 export default function WelcomePage({ onYes }: WelcomePageProps) {
   const [hearts, setHearts] = useState<{ id: number; left: number; delay: number; size: number }[]>([]);
   const [showContent, setShowContent] = useState(false);
-  const [noButtonOffset, setNoButtonOffset] = useState({ x: 0, y: 0 });
+  const [noButtonPos, setNoButtonPos] = useState<NoButtonPos | null>(null);
+
   const noButtonRef = useRef<HTMLButtonElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const yesButtonRef = useRef<HTMLButtonElement>(null);
-  const [noButtonPos, setNoButtonPos] = useState<{ x: number; y: number } | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const lastMoveRef = useRef(0);
 
   useEffect(() => {
@@ -32,35 +37,71 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
     const placeInitialPosition = () => {
       const yes = yesButtonRef.current?.getBoundingClientRect();
       const no = noButtonRef.current?.getBoundingClientRect();
+
       if (!yes || !no) return;
 
       const margin = 12;
       const gap = 18;
 
-      const maxX = window.innerWidth - no.width - margin;
-      const maxY = window.innerHeight - no.height - margin;
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
 
-      let x = yes.right + gap;
-      let y = yes.top + (yes.height - no.height) / 2;
+      const maxX = viewportWidth - no.width - margin;
+      const maxY = viewportHeight - no.height - margin;
 
-      if (x > maxX) {
-        x = Math.max(margin, yes.left - gap - no.width);
+      const centerY = yes.top + (yes.height - no.height) / 2;
+
+      const candidates = [
+        // kanan tombol Ya
+        {
+          x: yes.right + gap,
+          y: centerY,
+        },
+        // kiri tombol Ya
+        {
+          x: yes.left - no.width - gap,
+          y: centerY,
+        },
+        // bawah tombol Ya
+        {
+          x: yes.left,
+          y: yes.bottom + gap,
+        },
+        // atas tombol Ya
+        {
+          x: yes.left,
+          y: yes.top - no.height - gap,
+        },
+      ];
+
+      const fits = (x: number, y: number) => x >= margin && y >= margin && x <= maxX && y <= maxY;
+
+      let chosen = candidates.find((c) => fits(c.x, c.y));
+
+      if (!chosen) {
+        let x = yes.right + gap;
+        let y = centerY;
+
+        x = Math.max(margin, Math.min(x, maxX));
+        y = Math.max(margin, Math.min(y, maxY));
+
+        chosen = { x, y };
       }
 
-      if (y < margin) y = margin;
-      if (y > maxY) y = maxY;
-
-      setNoButtonPos({ x, y });
+      setNoButtonPos(chosen);
     };
 
-    requestAnimationFrame(placeInitialPosition);
+    const raf = requestAnimationFrame(placeInitialPosition);
     window.addEventListener('resize', placeInitialPosition);
 
-    return () => window.removeEventListener('resize', placeInitialPosition);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', placeInitialPosition);
+    };
   }, []);
 
   const moveButton = useCallback(
-    (e: React.MouseEvent<HTMLElement>) => {
+    (e: React.MouseEvent<HTMLButtonElement>) => {
       const button = noButtonRef.current;
       const yes = yesButtonRef.current;
       if (!button || !yes || !noButtonPos) return;
@@ -79,61 +120,77 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
 
       const distanceToCursor = Math.hypot(centerX - mouseX, centerY - mouseY);
 
-      // Hanya bergerak kalau cursor memang dekat
+      // Hanya bergerak kalau cursor benar-benar dekat
       if (distanceToCursor > 140) return;
 
       const margin = 12;
+      const gapFromYes = 18;
       const maxX = window.innerWidth - rect.width - margin;
       const maxY = window.innerHeight - rect.height - margin;
 
-      const isOverlappingYes = (x: number, y: number) => {
-        const pad = 18;
-        return !(x + rect.width < yesRect.left - pad || x > yesRect.right + pad || y + rect.height < yesRect.top - pad || y > yesRect.bottom + pad);
+      const overlapsYes = (x: number, y: number) => {
+        return !(x + rect.width < yesRect.left - gapFromYes || x > yesRect.right + gapFromYes || y + rect.height < yesRect.top - gapFromYes || y > yesRect.bottom + gapFromYes);
       };
 
-      let bestX = noButtonPos.x;
-      let bestY = noButtonPos.y;
+      const currentCenterX = rect.left + rect.width / 2;
+      const currentCenterY = rect.top + rect.height / 2;
+
+      let dx = currentCenterX - mouseX;
+      let dy = currentCenterY - mouseY;
+      const dist = Math.hypot(dx, dy) || 1;
+
+      dx /= dist;
+      dy /= dist;
+
+      const step = 90 + Math.random() * 60;
+
+      let best: { x: number; y: number } | null = null;
       let bestScore = -Infinity;
 
-      for (let i = 0; i < 12; i++) {
-        const baseAngle = Math.atan2(centerY - mouseY, centerX - mouseX);
-        const angle = baseAngle + (Math.random() - 0.5) * 1.2;
-        const step = 90 + Math.random() * 70;
+      for (let i = 0; i < 10; i++) {
+        const spread = (Math.random() - 0.5) * 0.9;
+        const angle = Math.atan2(dy, dx) + spread;
 
-        const candidateX = Math.max(margin, Math.min(noButtonPos.x + Math.cos(angle) * step, maxX));
-        const candidateY = Math.max(margin, Math.min(noButtonPos.y + Math.sin(angle) * step, maxY));
+        let candidateX = noButtonPos.x + Math.cos(angle) * step;
+        let candidateY = noButtonPos.y + Math.sin(angle) * step;
 
-        if (isOverlappingYes(candidateX, candidateY)) continue;
+        candidateX = Math.max(margin, Math.min(candidateX, maxX));
+        candidateY = Math.max(margin, Math.min(candidateY, maxY));
 
-        const awayFromCursor = Math.hypot(candidateX + rect.width / 2 - mouseX, candidateY + rect.height / 2 - mouseY);
+        if (overlapsYes(candidateX, candidateY)) continue;
 
+        const candidateCenterX = candidateX + rect.width / 2;
+        const candidateCenterY = candidateY + rect.height / 2;
+
+        const awayFromCursor = Math.hypot(candidateCenterX - mouseX, candidateCenterY - mouseY);
         const edgeRoom = Math.min(candidateX - margin, candidateY - margin, maxX - candidateX, maxY - candidateY);
 
-        const score = awayFromCursor + edgeRoom;
+        const score = awayFromCursor + edgeRoom * 0.5;
 
         if (score > bestScore) {
           bestScore = score;
-          bestX = candidateX;
-          bestY = candidateY;
+          best = { x: candidateX, y: candidateY };
         }
       }
 
-      // Fallback kalau semua kandidat bentrok dengan tombol Ya
-      if (bestScore === -Infinity) {
-        const pushRight = noButtonPos.x < window.innerWidth / 2 ? 1 : -1;
-        const pushDown = noButtonPos.y < window.innerHeight / 2 ? 1 : -1;
+      if (!best) {
+        // fallback aman
+        let candidateX = noButtonPos.x + (noButtonPos.x < window.innerWidth / 2 ? 100 : -100);
+        let candidateY = noButtonPos.y + (noButtonPos.y < window.innerHeight / 2 ? 60 : -60);
 
-        bestX = Math.max(margin, Math.min(noButtonPos.x + pushRight * 110, maxX));
-        bestY = Math.max(margin, Math.min(noButtonPos.y + pushDown * 60, maxY));
+        candidateX = Math.max(margin, Math.min(candidateX, maxX));
+        candidateY = Math.max(margin, Math.min(candidateY, maxY));
 
-        if (isOverlappingYes(bestX, bestY)) {
-          bestX = Math.max(margin, Math.min(yesRect.right + 24, maxX));
-          bestY = Math.max(margin, Math.min(yesRect.bottom + 24, maxY));
+        if (overlapsYes(candidateX, candidateY)) {
+          candidateX = Math.max(margin, Math.min(yesRect.right + 24, maxX));
+          candidateY = Math.max(margin, Math.min(yesRect.bottom + 24, maxY));
         }
+
+        best = { x: candidateX, y: candidateY };
       }
 
       lastMoveRef.current = now;
-      setNoButtonPos({ x: bestX, y: bestY });
+      setNoButtonPos(best);
     },
     [noButtonPos]
   );
@@ -197,6 +254,7 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
           <button
             ref={noButtonRef}
             onMouseMove={moveButton}
+            onMouseEnter={moveButton}
             className="btn-runaway bg-gray-400 hover:bg-gray-500 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg cursor-not-allowed transition-[left,top] duration-300 ease-out"
             style={
               noButtonPos
