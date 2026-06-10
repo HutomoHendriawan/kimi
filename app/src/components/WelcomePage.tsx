@@ -39,22 +39,24 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
 
     const distance = Math.hypot(centerX - mouseX, centerY - mouseY);
 
-    // Hanya bergerak kalau cursor benar-benar dekat
-    if (distance > 140) return;
+    // mulai lari lebih cepat saat cursor mendekat
+    if (distance > 180) return;
 
     const dx = (centerX - mouseX) / (distance || 1);
     const dy = (centerY - mouseY) / (distance || 1);
 
-    const moveStep = 18 + Math.random() * 16; // kecil dan natural
-    const jitterX = (Math.random() - 0.5) * 10;
-    const jitterY = (Math.random() - 0.5) * 8;
+    const intensity = Math.max(0.6, (180 - distance) / 180);
 
-    const limitX = 90; // batas gerak horizontal
-    const limitY = 28; // batas gerak vertikal
+    const moveStep = 28 + Math.random() * 22; // lebih jauh, tapi tetap halus
+    const jitterX = (Math.random() - 0.5) * 12;
+    const jitterY = (Math.random() - 0.5) * 10;
+
+    const limitX = 150; // batas gerak horizontal lebih lebar
+    const limitY = 55; // batas gerak vertikal tetap aman
 
     setNoButtonOffset((prev) => {
-      let nextX = prev.x + dx * moveStep + jitterX;
-      let nextY = prev.y + dy * moveStep + jitterY;
+      let nextX = prev.x + dx * moveStep * intensity + jitterX;
+      let nextY = prev.y + dy * moveStep * intensity + jitterY;
 
       nextX = Math.max(-limitX, Math.min(limitX, nextX));
       nextY = Math.max(-limitY, Math.min(limitY, nextY));
@@ -119,7 +121,7 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
             ref={noButtonRef}
             onMouseEnter={moveButton}
             onMouseMove={moveButton}
-            className="btn-runaway bg-gray-400 hover:bg-gray-500 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg cursor-not-allowed transition-transform duration-200 ease-out"
+            className="btn-runaway bg-gray-400 hover:bg-gray-500 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg cursor-not-allowed transition-transform duration-300 ease-out"
             style={{
               transform: `translate(${noButtonOffset.x}px, ${noButtonOffset.y}px)`,
               position: 'relative',
