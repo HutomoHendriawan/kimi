@@ -100,6 +100,7 @@ export const contentItems: ContentItem[] = [
 
 export interface AlbumPhoto {
   id: number;
+  title: string;
   category: string;
   image: string;
 }
@@ -109,36 +110,43 @@ export const albumCategories = ['Semua', 'CEKULAH', 'Part-time', 'TOGEDEH', 'Sid
 export const albumPhotos: AlbumPhoto[] = [
   {
     id: 1,
+    title: 'Acha Take Photo at Random Spot',
     category: 'Random',
     image: '/images/album/Random.jpeg',
   },
   {
     id: 2,
+    title: 'I Take SS of Her muehehehe',
     category: 'Side-quest',
     image: '/images/album/Side-quest.jpeg',
   },
   {
     id: 3,
+    title: 'During, Before, or After Work',
     category: 'Infineon',
     image: '/images/album/Infineon.jpeg',
   },
   {
     id: 4,
+    title: 'We Taking Pict TOGEDEH FOEVEH',
     category: 'TOGEDEH',
     image: '/images/album/Togedeh.jpeg',
   },
   {
     id: 5,
+    title: 'Acha Anak Cekulah',
     category: 'CEKULAH',
     image: '/images/album/CEKULAH.jpeg',
   },
   {
     id: 6,
+    title: 'Goks Kata Gue teh',
     category: 'Part-time',
     image: '/images/album/Part-time.jpeg',
   },
   {
     id: 7,
+    title: 'TAP TAP LAYAR',
     category: 'Kak Dessy',
     image: '/images/album/Kak-Dessy.jpeg',
   },
