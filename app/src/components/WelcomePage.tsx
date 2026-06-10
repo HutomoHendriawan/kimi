@@ -113,7 +113,7 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
         <div className="flex justify-center items-center gap-6 relative min-h-[80px]">
           {/* Yes Button - Stays in place */}
           <button onClick={onYes} className="btn-romantic p-0 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all overflow-hidden">
-            <img src="/images/Ya.jpeg" alt="Ya" className="w-10 h-7 object-cover block" />
+            <img src="/images/Ya.jpeg" alt="Ya" className="w-10 h-auto object-cover block" />
           </button>
 
           {/* No Button - Runs away */}
@@ -127,7 +127,7 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
               position: 'relative',
             }}
           >
-            <img src="/images/GK.jpg" alt="Tidak" className="w-10 h-7 object-cover block" />
+            <img src="/images/GK.jpg" alt="Tidak" className="w-10 h-auto object-cover block" />
           </button>
         </div>
 

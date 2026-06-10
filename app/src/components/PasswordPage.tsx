@@ -98,7 +98,7 @@ export default function PasswordPage({ onCorrect }: PasswordPageProps) {
           </form>
 
           {/* Hint */}
-          <p className="text-center text-gray-400 text-xs mt-6">💕 Clue-nya adalah waktu di mana Tuhan menurunkan 1 jiwa cantik ke Bumi 💕</p>
+          <p className="text-center text-gray-400 text-xs mt-6">💕 Clue-nya adalah tahun di mana Tuhan menurunkan 1 jiwa cantik ke Bumi 💕</p>
         </div>
       </div>
 
