@@ -12,17 +12,17 @@ const defaultSongs: Song[] = [
   {
     title: 'You Are Gonna Live Forever in Me',
     artist: 'John Mayer',
-    url: 'https://jumpshare.com/share/6GZwFb6zzkr8cbfGqnQE',
+    url: '/musics/YTDown_YouTube_John-Mayer-You-re-Gonna-Live-Forever-in-_Media_08Ndzf5-HxI_009_128k.mp3',
   },
   {
     title: 'More Than Words',
     artist: 'Extreme',
-    url: 'https://jumpshare.com/share/sLayPRSihli8rcaVHfQg',
+    url: '/musics/YTDown_YouTube_Extreme-More-Than-Words-Official-Music-V_Media_UrIiLvg58SY_009_128k.mp3',
   },
   {
     title: 'After Midnight',
     artist: 'Blink-182',
-    url: 'https://jumpshare.com/share/G7bVQ9PIynv6V11lq99M',
+    url: '/musics/YTDown_YouTube_Blink-182-After-Midnight-album-audio_Media_HZelaBSSYwc_006_128k.mp3',
   },
 ];
 
