@@ -109,7 +109,7 @@ export default function AlbumPage({ onNext }: AlbumPageProps) {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)' }} onClick={() => setSelectedPhoto(null)}>
           <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden animate-in fade-in zoom-in-95 duration-300" onClick={(e) => e.stopPropagation()}>
             <div className="relative aspect-square">
-              <img src={selectedPhoto.image} alt={selectedPhoto.title} className="w-full h-full object-cover" />
+              <img src={selectedPhoto.image} alt={selectedPhoto.title} className="w-full h-full object-contain" />
               <button
                 onClick={() => setSelectedPhoto(null)}
                 className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"

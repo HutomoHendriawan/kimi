@@ -103,7 +103,7 @@ export default function ContentPage({ onNext }: ContentPageProps) {
           <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden animate-in fade-in zoom-in-95 duration-300" onClick={(e) => e.stopPropagation()}>
             {/* Modal Image */}
             <div className="relative h-56 md:h-64">
-              <img src={selectedItem.image} alt={selectedItem.title} className="w-full h-full object-cover" />
+              <img src={selectedItem.image} alt={selectedItem.title} className="w-full h-full object-contain" />
               <button
                 onClick={() => setSelectedItem(null)}
                 className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
