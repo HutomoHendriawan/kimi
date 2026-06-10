@@ -47,6 +47,19 @@ export default function MusicPlayer() {
     const audio = audioRef.current;
     if (!audio) return;
 
+    audio
+      .play()
+      .then(() => setIsPlaying(true))
+      .catch((error) => {
+        console.log('Autoplay gagal:', error);
+        setIsPlaying(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
     const updateTime = () => setCurrentTime(audio.currentTime);
     const updateDuration = () => setDuration(audio.duration);
     const handleEnded = () => handleNext();
@@ -115,7 +128,7 @@ export default function MusicPlayer() {
 
   return (
     <>
-      <audio ref={audioRef} src={currentSong.url} preload="metadata" />
+      <audio ref={audioRef} src={currentSong.url} preload="auto" />
 
       {/* Minimized View */}
       {isMinimized ? (
