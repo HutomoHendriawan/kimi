@@ -8,6 +8,8 @@ interface WelcomePageProps {
 export default function WelcomePage({ onYes }: WelcomePageProps) {
   const [hearts, setHearts] = useState<{ id: number; left: number; delay: number; size: number }[]>([]);
   const [showContent, setShowContent] = useState(false);
+  const [noButtonPos, setNoButtonPos] = useState({ x: 0, y: 0 });
+  const [isMoved, setIsMoved] = useState(false);
   const noButtonRef = useRef<HTMLButtonElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -24,45 +26,52 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
     return () => clearTimeout(timer);
   }, []);
 
-  const moveButton = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    const button = noButtonRef.current;
-    if (!button) return;
+  const moveButton = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (!noButtonRef.current) return;
 
-    const rect = button.getBoundingClientRect();
+      const button = noButtonRef.current;
+      const rect = button.getBoundingClientRect();
 
-    const margin = 12;
-    const step = 140 + Math.random() * 120;
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
 
-    const currentLeft = rect.left;
-    const currentTop = rect.top;
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
 
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
+      const distance = Math.hypot(centerX - mouseX, centerY - mouseY);
 
-    const centerX = currentLeft + rect.width / 2;
-    const centerY = currentTop + rect.height / 2;
+      // Hanya lari jika cursor sudah dekat
+      if (distance > 120) return;
 
-    let dx = centerX - mouseX;
-    let dy = centerY - mouseY;
+      let dx = centerX - mouseX;
+      let dy = centerY - mouseY;
 
-    const dist = Math.hypot(dx, dy) || 1;
-    dx /= dist;
-    dy /= dist;
+      const length = Math.hypot(dx, dy) || 1;
 
-    let nextLeft = currentLeft + dx * step;
-    let nextTop = currentTop + dy * step;
+      dx /= length;
+      dy /= length;
 
-    const maxLeft = window.innerWidth - rect.width - margin;
-    const maxTop = window.innerHeight - rect.height - margin;
+      const moveDistance = 120;
 
-    nextLeft = Math.max(margin, Math.min(nextLeft, maxLeft));
-    nextTop = Math.max(margin, Math.min(nextTop, maxTop));
+      let nextX = noButtonPos.x + dx * moveDistance;
+      let nextY = noButtonPos.y + dy * moveDistance;
 
-    button.style.position = 'fixed';
-    button.style.left = `${nextLeft}px`;
-    button.style.top = `${nextTop}px`;
-    button.style.zIndex = '9999';
-  }, []);
+      const maxX = window.innerWidth - rect.width - 20;
+      const maxY = window.innerHeight - rect.height - 20;
+
+      nextX = Math.max(-250, Math.min(nextX, maxX));
+      nextY = Math.max(-200, Math.min(nextY, maxY));
+
+      setNoButtonPos({
+        x: nextX,
+        y: nextY,
+      });
+
+      setIsMoved(true);
+    },
+    [noButtonPos]
+  );
   return (
     <div ref={containerRef} className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden px-4 py-8">
       {/* Floating hearts background */}
@@ -117,10 +126,11 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
           {/* No Button - Runs away */}
           <button
             ref={noButtonRef}
-            onMouseEnter={moveButton}
             onMouseMove={moveButton}
-            className="btn-runaway bg-gray-400 hover:bg-gray-500 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg cursor-not-allowed"
-            style={{ position: 'fixed', left: '0px', top: '0px' }}
+            className="btn-runaway bg-gray-400 hover:bg-gray-500 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg cursor-not-allowed transition-transform duration-300 ease-out"
+            style={{
+              transform: isMoved ? `translate(${noButtonPos.x}px, ${noButtonPos.y}px)` : 'translate(0px, 0px)',
+            }}
           >
             <img src="/images/GK.jpg" alt="Tidak" className="w-32 h-auto" />
           </button>
