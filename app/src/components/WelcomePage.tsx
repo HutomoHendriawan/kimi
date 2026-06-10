@@ -47,12 +47,12 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
 
     const intensity = Math.max(0.6, (180 - distance) / 180);
 
-    const moveStep = 36 + Math.random() * 28; // lebih jauh, tapi tetap halus
+    const moveStep = 38 + Math.random() * 34; // lebih jauh, tapi tetap halus
     const jitterX = (Math.random() - 0.5) * 12;
     const jitterY = (Math.random() - 0.5) * 10;
 
-    const limitX = 170; // batas gerak horizontal lebih lebar
-    const limitY = 75; // batas gerak vertikal tetap aman
+    const limitX = 220; // batas gerak horizontal lebih lebar
+    const limitY = 90; // batas gerak vertikal tetap aman
 
     setNoButtonOffset((prev) => {
       let nextX = prev.x + dx * moveStep * intensity + jitterX;
@@ -113,7 +113,7 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
         <div className="flex justify-center items-center gap-6 relative min-h-[80px]">
           {/* Yes Button - Stays in place */}
           <button onClick={onYes} className="btn-romantic px-10 py-4 rounded-2xl font-bold text-lg flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all">
-            <img src="/images/Ya.jpeg" alt="Ya" />
+            <img src="/images/Ya.jpeg" alt="Ya" className="w-10 h-auto" />
           </button>
 
           {/* No Button - Runs away */}
@@ -127,7 +127,7 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
               position: 'relative',
             }}
           >
-            <img src="/images/GK.jpg" alt="Tidak" />
+            <img src="/images/GK.jpg" alt="Tidak" className="w-10 h-auto" />
           </button>
         </div>
 
