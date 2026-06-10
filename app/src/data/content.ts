@@ -70,7 +70,7 @@ export const contentItems: ContentItem[] = [
     id: 8,
     title: 'Tuker Cincin dan Rayain Ultahmu',
     description: 'Juni 2025',
-    image: '/images/content/Acha-8.jpg',
+    image: '/images/content/Acha-8.jpeg',
     fullDescription: 'Ini pertama kalinya aku hadir di ulang tahun kamu. Ultah2 sebelumnya gak ada aku huhuhu kasian ya kamu, belum ketemu cowo ganteng kaya aku (aku ganteng kata mama)',
   },
   {
