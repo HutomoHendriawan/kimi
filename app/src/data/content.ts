@@ -70,7 +70,7 @@ export const contentItems: ContentItem[] = [
     id: 8,
     title: 'Tuker Cincin dan Rayain Ultahmu',
     description: 'Juni 2025',
-    image: '/images/content/Acha-8.jpeg',
+    image: '/images/content/Acha-8.jpg',
     fullDescription: 'Ini pertama kalinya aku hadir di ulang tahun kamu. Ultah2 sebelumnya gak ada aku huhuhu kasian ya kamu, belum ketemu cowo ganteng kaya aku (aku ganteng kata mama)',
   },
   {
@@ -100,62 +100,59 @@ export const contentItems: ContentItem[] = [
 
 export interface AlbumPhoto {
   id: number;
-  title: string;
   category: string;
   image: string;
 }
 
-export const albumCategories = ['Semua', 'Romantis', 'Petualangan', 'Kebersamaan', 'Spesial'];
+export const albumCategories = ['Semua', 'CEKULAH', 'Part-time', 'TOGEDEH', 'Side-quest', 'Infineon', 'Random', 'Kak Dessy'];
 
 export const albumPhotos: AlbumPhoto[] = [
   {
     id: 1,
-    title: 'Kembang Api Cinta',
-    category: 'Spesial',
-    image: '/images/album/fireworks.jpg',
+    category: 'Random',
+    image: '/images/album/Random.jpeg',
   },
   {
     id: 2,
-    title: 'Masak Bersama',
-    category: 'Kebersamaan',
-    image: '/images/album/cooking.jpg',
+    category: 'Side-quest',
+    image: '/images/album/Side-quest.jpeg',
   },
   {
     id: 3,
-    title: 'Piknik di Taman',
-    category: 'Romantis',
-    image: '/images/album/picnic.jpg',
+    category: 'Infineon',
+    image: '/images/album/Infineon.jpeg',
   },
   {
     id: 4,
-    title: 'Melihat Bintang',
-    category: 'Romantis',
-    image: '/images/album/stargazing.jpg',
+    category: 'TOGEDEH',
+    image: '/images/album/Togedeh.jpeg',
   },
   {
     id: 5,
-    title: 'Menari di Hujan',
-    category: 'Petualangan',
-    image: '/images/album/rain.jpg',
+    category: 'CEKULAH',
+    image: '/images/album/CEKULAH.jpeg',
   },
   {
     id: 6,
-    title: 'Senja di Pantai',
-    category: 'Petualangan',
-    image: '/images/album/beach.jpg',
+    category: 'Part-time',
+    image: '/images/album/Part-time.jpeg',
+  },
+  {
+    id: 7,
+    category: 'Kak Dessy',
+    image: '/images/album/Kak-Dessy.jpeg',
   },
 ];
 
 export const articleContent = {
-  title: 'Surat Cinta Untukmu',
+  title: 'Selamat Ulang Tahun Sayang',
   paragraphs: [
-    'Sayangku,',
-    'Setiap hari bersamamu adalah anugerah yang tak pernah kusangka bisa kumiliki. Dari hari pertama kita bertemu, aku tahu ada sesuatu yang istimewa tentangmu — cara kamu tertawa, cara kamu memandang dunia dengan penuh kebaikan, dan cara kamu mencintaiku dengan tulus.',
-    'Kita telah melewati begitu banyak hal bersama — suka dan duka, tawa dan air mata, momen-momen sederhana dan petualangan besar. Setiap pengalaman itu mengukir kenangan indah yang akan selalu kukenang.',
-    'Aku bersyukur untuk setiap pagi yang kubangun dengan mengetahui kamu ada di sisiku. Untuk setiap malam yang kita lewati dengan bercerita hingga mata terpejam. Untuk setiap tantangan yang kita hadapi bersama dan keluar lebih kuat.',
-    'Kamu adalah rumahku, tempatku kembali, dan cinta sejatiku. Aku berjanji untuk terus mencintaimu, mendukungmu, dan berusaha menjadi versi terbaik diriku untukmu.',
-    'Terima kasih telah menjadi bagian dari hidupku. Aku tidak sabar untuk melihat apa yang masa depan bawa untuk kita berdua.',
+    'Sayang,',
+    'Makasih banget sebelumnya. Ini adalah hubungan yang paling berkesan, paling jauh, paling serius yang pernah aku jalanin. Jalanin hubungan bareng kamu aku belajar banyak hal, bareng kamu juga bikin aku lebih tau apa itu cinta sama kasih Sayang. Sama kamu juga aku belajar ternyata dalam hubungan bukan cuma cinta sama kasih sayang aja, ada emosi/perasaan lain, ada banyak hal yang perlu disiapin untuk ngelangkah ke jenjang yang lebih serius yang awalnya kupikir cukup cinta sama uang aja, ternyata ada lebih banyak daripada itu. Termasuk jadi tempat sandaran waktu butuh orang yang mana aku ternyata gak bisa jadi sandaran kamu disaat kamu butuh dipeluk.',
+    'Pahit manis jalanin hubungan udah kita rasain bareng. Kita pernah sama-sama terluka, bahkan kita sama-sama pernah melukain satu sama lain. Dan tentu aja kedepannya kita bakal tetep terluka, entah sama orang lain atau sama kita sendiri.',
+    'Aku gak pernah bilang dari awal kalau aku bakal selalu bahagian kamu. Tapi aku selalu bilang kalau aku akan ada buat kamu, apapun yang kamu rasain. Aku bakal selalu jadi orang terakhir yang ada buat kamu, walaupun gak ada orang lagi yang support kamu.',
+    'Aku maupun kamu gak jadi "yang pertama" untuk satu sama lain. Memang ada hal yang pertama kali kita lakuin bareng. Sesuatu yang pertama itu emang spesial. Tapi aku mau kamu jadi yang terakhir untukku dan aku jadi yang terakhir buatmu. In everything. Mungkin yang terakhir gak sespesial yang pertama, bahkan biasa aja tapi itu kan yang membuat "terakhir" jadi spesial. Mencintai sesuatu yang spesial itu biasa, sedangkan mencintai sesuatu yang biasa itu baru spesial. - EMOH (Endik bercemooh)',
   ],
-  closing: 'Selamanya milikmu,',
-  signature: 'Aku ❤️',
+  closing: 'You are mine forever,',
+  signature: 'From Me to You ❤️',
 };

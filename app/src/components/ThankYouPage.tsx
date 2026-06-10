@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
-import { Heart, Send, MessageCircle } from "lucide-react";
-import { WHATSAPP_NUMBER } from "@/data/content";
+import { useState, useEffect } from 'react';
+import { Heart, Send, MessageCircle } from 'lucide-react';
+import { WHATSAPP_NUMBER } from '@/data/content';
 
 export default function ThankYouPage() {
   const [showContent, setShowContent] = useState(false);
-  const [feedback, setFeedback] = useState("");
+  const [feedback, setFeedback] = useState('');
   const [hearts, setHearts] = useState<{ id: number; left: number; delay: number; size: number }[]>([]);
   const [submitted, setSubmitted] = useState(false);
 
@@ -25,9 +25,9 @@ export default function ThankYouPage() {
     e.preventDefault();
     if (!feedback.trim()) return;
 
-    const message = `Halo! Ada pesan untukmu dari website romantis:%0A%0A"${feedback}"%0A%0ADengan cinta ❤️`;
+    const message = `Halo! Ada pesan untukmu dari Pasanganmu yang manis:%0A%0A"${feedback}"%0A%0ADengan cinta ❤️`;
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
-    window.open(whatsappUrl, "_blank");
+    window.open(whatsappUrl, '_blank');
     setSubmitted(true);
   };
 
@@ -48,11 +48,7 @@ export default function ThankYouPage() {
         </div>
       ))}
 
-      <div
-        className={`w-full max-w-lg relative z-10 transition-all duration-700 ${
-          showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-        }`}
-      >
+      <div className={`w-full max-w-lg relative z-10 transition-all duration-700 ${showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         {/* Thank You Card */}
         <div className="bg-white/95 backdrop-blur-lg rounded-3xl shadow-2xl border border-pink-200/50 overflow-hidden">
           {/* Header */}
@@ -75,33 +71,23 @@ export default function ThankYouPage() {
             <div className="w-20 h-20 bg-white/20 backdrop-blur rounded-full flex items-center justify-center mx-auto mb-4 relative z-10">
               <Heart size={40} className="text-white fill-white pulse-soft" />
             </div>
-            <h1
-              className="text-2xl md:text-3xl font-bold text-white relative z-10"
-              style={{ fontFamily: "'Playfair Display', serif" }}
-            >
-              Terima Kasih
+            <h1 className="text-2xl md:text-3xl font-bold text-white relative z-10" style={{ fontFamily: "'Playfair Display', serif" }}>
+              Makasih
             </h1>
-            <p className="text-white/80 text-sm mt-2 relative z-10">
-              Sudah meluangkan waktu untuk melihat semua ini
-            </p>
+            <p className="text-white/80 text-sm mt-2 relative z-10">Udah membaca hal yang kubuat untuk kamu</p>
           </div>
 
           {/* Body */}
           <div className="p-6 md:p-8">
             <div className="text-center mb-8">
               <p className="text-gray-600 leading-relaxed text-sm md:text-base">
-                Setiap detik yang kita lewati bersama adalah anugerah terindah dalam hidupku.
-                Terima kasih sudah menjadi bagian dari kisahku. Aku mencintaimu, hari ini,
-                besok, dan selamanya.
+                Selamat ulang tahun Shahnaz Nurfatima Ismaila a.k.a Sayangku. Semoga menjadi pribadi yang lebih baik, lebih dewasa, selain karirnya yang berkembang, dirinya juga ikut berkembang.
+                Semoga banyak duitnya, makin jago ngelola duit, ngehasilin duit lebih banyak, dan bermanfaat buat orang. Kenapa aku do'ain aku sendiri??? Karena ada cewe cantik yang bilang ke aku
+                kalau aku kaya, dia bakal seneng
               </p>
               <div className="mt-4 flex justify-center gap-1">
                 {[...Array(5)].map((_, i) => (
-                  <Heart
-                    key={i}
-                    size={16}
-                    className="text-pink-400 fill-pink-400"
-                    style={{ animationDelay: `${i * 0.2}s` }}
-                  />
+                  <Heart key={i} size={16} className="text-pink-400 fill-pink-400" style={{ animationDelay: `${i * 0.2}s` }} />
                 ))}
               </div>
             </div>
@@ -111,12 +97,12 @@ export default function ThankYouPage() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="flex items-center gap-2 mb-3">
                   <MessageCircle size={20} className="text-pink-500" />
-                  <h3 className="font-semibold text-gray-700 text-sm">Kirim pesan untukku</h3>
+                  <h3 className="font-semibold text-gray-700 text-sm">Feedbacknya dong</h3>
                 </div>
                 <textarea
                   value={feedback}
                   onChange={(e) => setFeedback(e.target.value)}
-                  placeholder="Tulis pesanmu di sini..."
+                  placeholder="Aku bikin ini luamaaa. Masa jawabnya 'makasih' doang -_- just tell me everything... I'm all ears"
                   rows={4}
                   className="w-full px-4 py-3 rounded-xl border-2 border-pink-200 focus:border-pink-400 focus:outline-none resize-none text-sm text-gray-700 bg-pink-50/50 transition-colors"
                 />
@@ -126,23 +112,21 @@ export default function ThankYouPage() {
                   className="w-full btn-romantic py-3 rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Send size={18} />
-                  Kirim via WhatsApp
+                  Feedback kamu bakal otomatis kesend wa ku 😉
                 </button>
               </form>
             ) : (
               <div className="text-center py-6 bg-pink-50 rounded-2xl">
                 <Heart size={32} className="mx-auto text-pink-500 fill-pink-500 mb-2" />
-                <p className="text-gray-700 font-medium">Pesanmu sudah terkirim! 💕</p>
-                <p className="text-gray-500 text-sm mt-1">Terima kasih sudah mengirim pesan.</p>
+                <p className="text-gray-700 font-medium">Feedback kamu udah terkirim!</p>
+                <p className="text-gray-500 text-sm mt-1">Makasih ya Sayang.</p>
               </div>
             )}
           </div>
         </div>
 
         {/* Footer */}
-        <p className="text-center text-gray-400 text-xs mt-6">
-          Dibuat dengan ❤️ khusus untukmu
-        </p>
+        <p className="text-center text-gray-400 text-xs mt-6">Dibuat dengan ❤️ khusus untukmu</p>
       </div>
     </div>
   );
