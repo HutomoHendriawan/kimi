@@ -112,8 +112,8 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
         {/* Buttons */}
         <div className="flex justify-center items-center gap-6 relative min-h-[80px]">
           {/* Yes Button - Stays in place */}
-          <button onClick={onYes} className="btn-romantic px-10 py-4 rounded-2xl font-bold text-lg flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all">
-            <img src="/images/Ya.jpeg" alt="Ya" className="w-10 h-auto" />
+          <button onClick={onYes} className="btn-romantic p-0 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all overflow-hidden">
+            <img src="/images/Ya.jpeg" alt="Ya" className="w-10 h-7 object-cover block" />
           </button>
 
           {/* No Button - Runs away */}
@@ -121,13 +121,13 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
             ref={noButtonRef}
             onMouseEnter={moveButton}
             onMouseMove={moveButton}
-            className="btn-runaway bg-gray-400 hover:bg-gray-500 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg cursor-not-allowed transition-transform duration-300 ease-out"
+            className="btn-runaway bg-gray-400 hover:bg-gray-500 text-white p-0 rounded-2xl font-semibold shadow-lg cursor-not-allowed transition-transform duration-300 ease-out overflow-hidden"
             style={{
               transform: `translate(${noButtonOffset.x}px, ${noButtonOffset.y}px)`,
               position: 'relative',
             }}
           >
-            <img src="/images/GK.jpg" alt="Tidak" className="w-10 h-auto" />
+            <img src="/images/GK.jpg" alt="Tidak" className="w-10 h-7 object-cover block" />
           </button>
         </div>
 
