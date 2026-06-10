@@ -25,47 +25,47 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
   }, []);
 
   const moveButton = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!noButtonRef.current || !containerRef.current) return;
+    if (!noButtonRef.current) return;
 
     const button = noButtonRef.current;
-    const container = containerRef.current;
-    const containerRect = container.getBoundingClientRect();
     const buttonRect = button.getBoundingClientRect();
 
     const mouseX = e.clientX;
     const mouseY = e.clientY;
 
-    // Calculate max positions keeping button within container
-    const maxX = containerRect.width - buttonRect.width - 20;
-    const maxY = containerRect.height - buttonRect.height - 20;
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
 
-    // Generate random position away from cursor
-    let newX: number;
-    let newY: number;
+    const safeMargin = 16;
+    const moveDistance = 180 + Math.random() * 120;
 
-    const cursorRelativeX = mouseX - containerRect.left;
-    const cursorRelativeY = mouseY - containerRect.top;
+    const buttonCenterX = buttonRect.left + buttonRect.width / 2;
+    const buttonCenterY = buttonRect.top + buttonRect.height / 2;
 
-    // Try to place button away from cursor
-    if (cursorRelativeX < containerRect.width / 2) {
-      newX = Math.random() * (maxX / 2) + maxX / 2;
-    } else {
-      newX = Math.random() * (maxX / 2);
+    let dx = buttonCenterX - mouseX;
+    let dy = buttonCenterY - mouseY;
+    let distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance < 0.001) {
+      const angle = Math.random() * Math.PI * 2;
+      dx = Math.cos(angle);
+      dy = Math.sin(angle);
+      distance = 1;
     }
 
-    if (cursorRelativeY < containerRect.height / 2) {
-      newY = Math.random() * (maxY / 2) + maxY / 2;
-    } else {
-      newY = Math.random() * (maxY / 2);
-    }
+    const unitX = dx / distance;
+    const unitY = dy / distance;
 
-    // Ensure button stays in bounds
-    newX = Math.max(20, Math.min(newX, maxX));
-    newY = Math.max(20, Math.min(newY, maxY));
+    let newCenterX = mouseX + unitX * moveDistance;
+    let newCenterY = mouseY + unitY * moveDistance;
 
-    button.style.position = 'absolute';
-    button.style.left = `${newX}px`;
-    button.style.top = `${newY}px`;
+    newCenterX = Math.max(safeMargin + buttonRect.width / 2, Math.min(newCenterX, viewportWidth - safeMargin - buttonRect.width / 2));
+
+    newCenterY = Math.max(safeMargin + buttonRect.height / 2, Math.min(newCenterY, viewportHeight - safeMargin - buttonRect.height / 2));
+
+    button.style.position = 'fixed';
+    button.style.left = `${newCenterX - buttonRect.width / 2}px`;
+    button.style.top = `${newCenterY - buttonRect.height / 2}px`;
   }, []);
 
   return (
