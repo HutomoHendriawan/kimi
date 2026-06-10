@@ -1,24 +1,16 @@
-import { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Heart } from 'lucide-react';
 
 interface WelcomePageProps {
   onYes: () => void;
 }
 
-type NoButtonPos = {
-  x: number;
-  y: number;
-};
-
 export default function WelcomePage({ onYes }: WelcomePageProps) {
   const [hearts, setHearts] = useState<{ id: number; left: number; delay: number; size: number }[]>([]);
   const [showContent, setShowContent] = useState(false);
-  const [noButtonPos, setNoButtonPos] = useState<NoButtonPos | null>(null);
-
+  const [noButtonOffset, setNoButtonOffset] = useState({ x: 0, y: 0 });
   const noButtonRef = useRef<HTMLButtonElement>(null);
-  const yesButtonRef = useRef<HTMLButtonElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const lastMoveRef = useRef(0);
 
   useEffect(() => {
     const generatedHearts = Array.from({ length: 20 }, (_, i) => ({
@@ -33,167 +25,45 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
     return () => clearTimeout(timer);
   }, []);
 
-  useLayoutEffect(() => {
-    const placeInitialPosition = () => {
-      const yes = yesButtonRef.current?.getBoundingClientRect();
-      const no = noButtonRef.current?.getBoundingClientRect();
+  const moveButton = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!noButtonRef.current) return;
 
-      if (!yes || !no) return;
+    const button = noButtonRef.current;
+    const rect = button.getBoundingClientRect();
 
-      const margin = 12;
-      const gap = 18;
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
 
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
 
-      const maxX = viewportWidth - no.width - margin;
-      const maxY = viewportHeight - no.height - margin;
+    const distance = Math.hypot(centerX - mouseX, centerY - mouseY);
 
-      const centerY = yes.top + (yes.height - no.height) / 2;
+    // mulai lari lebih cepat saat cursor mendekat
+    if (distance > 180) return;
 
-      const candidates = [
-        // kanan tombol Ya
-        {
-          x: yes.right + gap,
-          y: centerY,
-        },
-        // kiri tombol Ya
-        {
-          x: yes.left - no.width - gap,
-          y: centerY,
-        },
-        // bawah tombol Ya
-        {
-          x: yes.left,
-          y: yes.bottom + gap,
-        },
-        // atas tombol Ya
-        {
-          x: yes.left,
-          y: yes.top - no.height - gap,
-        },
-      ];
+    const dx = (centerX - mouseX) / (distance || 1);
+    const dy = (centerY - mouseY) / (distance || 1);
 
-      const fits = (x: number, y: number) => x >= margin && y >= margin && x <= maxX && y <= maxY;
+    const intensity = Math.max(0.6, (180 - distance) / 180);
 
-      let chosen = candidates.find((c) => fits(c.x, c.y));
+    const moveStep = 36 + Math.random() * 28; // lebih jauh, tapi tetap halus
+    const jitterX = (Math.random() - 0.5) * 12;
+    const jitterY = (Math.random() - 0.5) * 10;
 
-      if (!chosen) {
-        let x = yes.right + gap;
-        let y = centerY;
+    const limitX = 170; // batas gerak horizontal lebih lebar
+    const limitY = 75; // batas gerak vertikal tetap aman
 
-        x = Math.max(margin, Math.min(x, maxX));
-        y = Math.max(margin, Math.min(y, maxY));
+    setNoButtonOffset((prev) => {
+      let nextX = prev.x + dx * moveStep * intensity + jitterX;
+      let nextY = prev.y + dy * moveStep * intensity + jitterY;
 
-        chosen = { x, y };
-      }
+      nextX = Math.max(-limitX, Math.min(limitX, nextX));
+      nextY = Math.max(-limitY, Math.min(limitY, nextY));
 
-      setNoButtonPos(chosen);
-    };
-
-    const raf = requestAnimationFrame(placeInitialPosition);
-    window.addEventListener('resize', placeInitialPosition);
-
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener('resize', placeInitialPosition);
-    };
+      return { x: nextX, y: nextY };
+    });
   }, []);
-
-  const moveButton = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      const button = noButtonRef.current;
-      const yes = yesButtonRef.current;
-      if (!button || !yes || !noButtonPos) return;
-
-      const now = Date.now();
-      if (now - lastMoveRef.current < 180) return;
-
-      const rect = button.getBoundingClientRect();
-      const yesRect = yes.getBoundingClientRect();
-
-      const mouseX = e.clientX;
-      const mouseY = e.clientY;
-
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-
-      const distanceToCursor = Math.hypot(centerX - mouseX, centerY - mouseY);
-
-      // Hanya bergerak kalau cursor benar-benar dekat
-      if (distanceToCursor > 140) return;
-
-      const margin = 12;
-      const gapFromYes = 18;
-      const maxX = window.innerWidth - rect.width - margin;
-      const maxY = window.innerHeight - rect.height - margin;
-
-      const overlapsYes = (x: number, y: number) => {
-        return !(x + rect.width < yesRect.left - gapFromYes || x > yesRect.right + gapFromYes || y + rect.height < yesRect.top - gapFromYes || y > yesRect.bottom + gapFromYes);
-      };
-
-      const currentCenterX = rect.left + rect.width / 2;
-      const currentCenterY = rect.top + rect.height / 2;
-
-      let dx = currentCenterX - mouseX;
-      let dy = currentCenterY - mouseY;
-      const dist = Math.hypot(dx, dy) || 1;
-
-      dx /= dist;
-      dy /= dist;
-
-      const step = 90 + Math.random() * 60;
-
-      let best: { x: number; y: number } | null = null;
-      let bestScore = -Infinity;
-
-      for (let i = 0; i < 10; i++) {
-        const spread = (Math.random() - 0.5) * 0.9;
-        const angle = Math.atan2(dy, dx) + spread;
-
-        let candidateX = noButtonPos.x + Math.cos(angle) * step;
-        let candidateY = noButtonPos.y + Math.sin(angle) * step;
-
-        candidateX = Math.max(margin, Math.min(candidateX, maxX));
-        candidateY = Math.max(margin, Math.min(candidateY, maxY));
-
-        if (overlapsYes(candidateX, candidateY)) continue;
-
-        const candidateCenterX = candidateX + rect.width / 2;
-        const candidateCenterY = candidateY + rect.height / 2;
-
-        const awayFromCursor = Math.hypot(candidateCenterX - mouseX, candidateCenterY - mouseY);
-        const edgeRoom = Math.min(candidateX - margin, candidateY - margin, maxX - candidateX, maxY - candidateY);
-
-        const score = awayFromCursor + edgeRoom * 0.5;
-
-        if (score > bestScore) {
-          bestScore = score;
-          best = { x: candidateX, y: candidateY };
-        }
-      }
-
-      if (!best) {
-        // fallback aman
-        let candidateX = noButtonPos.x + (noButtonPos.x < window.innerWidth / 2 ? 100 : -100);
-        let candidateY = noButtonPos.y + (noButtonPos.y < window.innerHeight / 2 ? 60 : -60);
-
-        candidateX = Math.max(margin, Math.min(candidateX, maxX));
-        candidateY = Math.max(margin, Math.min(candidateY, maxY));
-
-        if (overlapsYes(candidateX, candidateY)) {
-          candidateX = Math.max(margin, Math.min(yesRect.right + 24, maxX));
-          candidateY = Math.max(margin, Math.min(yesRect.bottom + 24, maxY));
-        }
-
-        best = { x: candidateX, y: candidateY };
-      }
-
-      lastMoveRef.current = now;
-      setNoButtonPos(best);
-    },
-    [noButtonPos]
-  );
 
   return (
     <div ref={containerRef} className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden px-4 py-8">
@@ -242,32 +112,20 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
         {/* Buttons */}
         <div className="flex justify-center items-center gap-6 relative min-h-[80px]">
           {/* Yes Button - Stays in place */}
-          <button
-            ref={yesButtonRef}
-            onClick={onYes}
-            className="btn-romantic px-10 py-4 rounded-2xl font-bold text-lg flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all"
-          >
+          <button onClick={onYes} className="btn-romantic px-10 py-4 rounded-2xl font-bold text-lg flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all">
             <img src="/images/Ya.jpeg" alt="Ya" className="w-32 h-auto" />
           </button>
 
           {/* No Button - Runs away */}
           <button
             ref={noButtonRef}
-            onMouseMove={moveButton}
             onMouseEnter={moveButton}
-            className="btn-runaway bg-gray-400 hover:bg-gray-500 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg cursor-not-allowed transition-[left,top] duration-300 ease-out"
-            style={
-              noButtonPos
-                ? {
-                    position: 'fixed',
-                    left: `${noButtonPos.x}px`,
-                    top: `${noButtonPos.y}px`,
-                    zIndex: 50,
-                  }
-                : {
-                    position: 'relative',
-                  }
-            }
+            onMouseMove={moveButton}
+            className="btn-runaway bg-gray-400 hover:bg-gray-500 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg cursor-not-allowed transition-transform duration-300 ease-out"
+            style={{
+              transform: `translate(${noButtonOffset.x}px, ${noButtonOffset.y}px)`,
+              position: 'relative',
+            }}
           >
             <img src="/images/GK.jpg" alt="Tidak" className="w-32 h-auto" />
           </button>
