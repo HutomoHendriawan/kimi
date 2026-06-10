@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
 import { Heart } from 'lucide-react';
 
 interface WelcomePageProps {
@@ -11,6 +11,9 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
   const [noButtonOffset, setNoButtonOffset] = useState({ x: 0, y: 0 });
   const noButtonRef = useRef<HTMLButtonElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const yesButtonRef = useRef<HTMLButtonElement>(null);
+  const [noButtonPos, setNoButtonPos] = useState<{ x: number; y: number } | null>(null);
+  const lastMoveRef = useRef(0);
 
   useEffect(() => {
     const generatedHearts = Array.from({ length: 20 }, (_, i) => ({
@@ -25,45 +28,115 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
     return () => clearTimeout(timer);
   }, []);
 
-  const moveButton = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!noButtonRef.current) return;
+  useLayoutEffect(() => {
+    const placeInitialPosition = () => {
+      const yes = yesButtonRef.current?.getBoundingClientRect();
+      const no = noButtonRef.current?.getBoundingClientRect();
+      if (!yes || !no) return;
 
-    const button = noButtonRef.current;
-    const rect = button.getBoundingClientRect();
+      const margin = 12;
+      const gap = 18;
 
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
+      const maxX = window.innerWidth - no.width - margin;
+      const maxY = window.innerHeight - no.height - margin;
 
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
+      let x = yes.right + gap;
+      let y = yes.top + (yes.height - no.height) / 2;
 
-    const distance = Math.hypot(centerX - mouseX, centerY - mouseY);
+      if (x > maxX) {
+        x = Math.max(margin, yes.left - gap - no.width);
+      }
 
-    // mulai lari lebih cepat saat cursor mendekat
-    if (distance > 180) return;
+      if (y < margin) y = margin;
+      if (y > maxY) y = maxY;
 
-    const dx = (centerX - mouseX) / (distance || 1);
-    const dy = (centerY - mouseY) / (distance || 1);
+      setNoButtonPos({ x, y });
+    };
 
-    const intensity = Math.max(0.6, (180 - distance) / 180);
+    requestAnimationFrame(placeInitialPosition);
+    window.addEventListener('resize', placeInitialPosition);
 
-    const moveStep = 28 + Math.random() * 22; // lebih jauh, tapi tetap halus
-    const jitterX = (Math.random() - 0.5) * 12;
-    const jitterY = (Math.random() - 0.5) * 10;
-
-    const limitX = 150; // batas gerak horizontal lebih lebar
-    const limitY = 55; // batas gerak vertikal tetap aman
-
-    setNoButtonOffset((prev) => {
-      let nextX = prev.x + dx * moveStep * intensity + jitterX;
-      let nextY = prev.y + dy * moveStep * intensity + jitterY;
-
-      nextX = Math.max(-limitX, Math.min(limitX, nextX));
-      nextY = Math.max(-limitY, Math.min(limitY, nextY));
-
-      return { x: nextX, y: nextY };
-    });
+    return () => window.removeEventListener('resize', placeInitialPosition);
   }, []);
+
+  const moveButton = useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
+      const button = noButtonRef.current;
+      const yes = yesButtonRef.current;
+      if (!button || !yes || !noButtonPos) return;
+
+      const now = Date.now();
+      if (now - lastMoveRef.current < 180) return;
+
+      const rect = button.getBoundingClientRect();
+      const yesRect = yes.getBoundingClientRect();
+
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      const distanceToCursor = Math.hypot(centerX - mouseX, centerY - mouseY);
+
+      // Hanya bergerak kalau cursor memang dekat
+      if (distanceToCursor > 140) return;
+
+      const margin = 12;
+      const maxX = window.innerWidth - rect.width - margin;
+      const maxY = window.innerHeight - rect.height - margin;
+
+      const isOverlappingYes = (x: number, y: number) => {
+        const pad = 18;
+        return !(x + rect.width < yesRect.left - pad || x > yesRect.right + pad || y + rect.height < yesRect.top - pad || y > yesRect.bottom + pad);
+      };
+
+      let bestX = noButtonPos.x;
+      let bestY = noButtonPos.y;
+      let bestScore = -Infinity;
+
+      for (let i = 0; i < 12; i++) {
+        const baseAngle = Math.atan2(centerY - mouseY, centerX - mouseX);
+        const angle = baseAngle + (Math.random() - 0.5) * 1.2;
+        const step = 90 + Math.random() * 70;
+
+        const candidateX = Math.max(margin, Math.min(noButtonPos.x + Math.cos(angle) * step, maxX));
+        const candidateY = Math.max(margin, Math.min(noButtonPos.y + Math.sin(angle) * step, maxY));
+
+        if (isOverlappingYes(candidateX, candidateY)) continue;
+
+        const awayFromCursor = Math.hypot(candidateX + rect.width / 2 - mouseX, candidateY + rect.height / 2 - mouseY);
+
+        const edgeRoom = Math.min(candidateX - margin, candidateY - margin, maxX - candidateX, maxY - candidateY);
+
+        const score = awayFromCursor + edgeRoom;
+
+        if (score > bestScore) {
+          bestScore = score;
+          bestX = candidateX;
+          bestY = candidateY;
+        }
+      }
+
+      // Fallback kalau semua kandidat bentrok dengan tombol Ya
+      if (bestScore === -Infinity) {
+        const pushRight = noButtonPos.x < window.innerWidth / 2 ? 1 : -1;
+        const pushDown = noButtonPos.y < window.innerHeight / 2 ? 1 : -1;
+
+        bestX = Math.max(margin, Math.min(noButtonPos.x + pushRight * 110, maxX));
+        bestY = Math.max(margin, Math.min(noButtonPos.y + pushDown * 60, maxY));
+
+        if (isOverlappingYes(bestX, bestY)) {
+          bestX = Math.max(margin, Math.min(yesRect.right + 24, maxX));
+          bestY = Math.max(margin, Math.min(yesRect.bottom + 24, maxY));
+        }
+      }
+
+      lastMoveRef.current = now;
+      setNoButtonPos({ x: bestX, y: bestY });
+    },
+    [noButtonPos]
+  );
 
   return (
     <div ref={containerRef} className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden px-4 py-8">
@@ -112,20 +185,31 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
         {/* Buttons */}
         <div className="flex justify-center items-center gap-6 relative min-h-[80px]">
           {/* Yes Button - Stays in place */}
-          <button onClick={onYes} className="btn-romantic px-10 py-4 rounded-2xl font-bold text-lg flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all">
+          <button
+            ref={yesButtonRef}
+            onClick={onYes}
+            className="btn-romantic px-10 py-4 rounded-2xl font-bold text-lg flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all"
+          >
             <img src="/images/Ya.jpeg" alt="Ya" className="w-32 h-auto" />
           </button>
 
           {/* No Button - Runs away */}
           <button
             ref={noButtonRef}
-            onMouseEnter={moveButton}
             onMouseMove={moveButton}
-            className="btn-runaway bg-gray-400 hover:bg-gray-500 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg cursor-not-allowed transition-transform duration-300 ease-out"
-            style={{
-              transform: `translate(${noButtonOffset.x}px, ${noButtonOffset.y}px)`,
-              position: 'relative',
-            }}
+            className="btn-runaway bg-gray-400 hover:bg-gray-500 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg cursor-not-allowed transition-[left,top] duration-300 ease-out"
+            style={
+              noButtonPos
+                ? {
+                    position: 'fixed',
+                    left: `${noButtonPos.x}px`,
+                    top: `${noButtonPos.y}px`,
+                    zIndex: 50,
+                  }
+                : {
+                    position: 'relative',
+                  }
+            }
           >
             <img src="/images/GK.jpg" alt="Tidak" className="w-32 h-auto" />
           </button>
