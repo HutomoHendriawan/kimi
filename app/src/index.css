@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Poppins:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --romantic-pink: #FFB6C1;
+  --romantic-rose: #FF69B4;
+  --romantic-deep: #C71585;
+  --romantic-cream: #FFF5EE;
+  --romantic-blush: #FFE4E1;
+  --romantic-lavender: #E6E6FA;
+  --romantic-gold: #DAA520;
+  --soft-peach: #FFDAB9;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #FFF5EE 0%, #FFE4E1 30%, #E6E6FA 70%, #FFF0F5 100%);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif;
+}
+
+/* Page Transitions */
+.page-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 500ms ease-out, transform 500ms ease-out;
+}
+
+.page-exit {
+  opacity: 1;
+}
+
+.page-exit-active {
+  opacity: 0;
+  transition: opacity 300ms ease-in;
+}
+
+/* Floating hearts animation */
+@keyframes float-heart {
+  0% {
+    transform: translateY(100vh) scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  90% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(-10vh) scale(1) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.heart-particle {
+  position: fixed;
+  pointer-events: none;
+  animation: float-heart linear infinite;
+  z-index: 0;
+}
+
+/* Pulse animation for romantic elements */
+@keyframes pulse-soft {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+/* Glow effect */
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(255, 105, 180, 0.3), 0 0 10px rgba(255, 105, 180, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.6), 0 0 40px rgba(255, 105, 180, 0.3);
+  }
+}
+
+.glow-effect {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Shimmer effect */
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.shimmer-text {
+  background: linear-gradient(90deg, #C71585 0%, #FF69B4 25%, #FFB6C1 50%, #FF69B4 75%, #C71585 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+}
+
+/* Fade in animation */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+
+/* Stagger children */
+.stagger-children > * {
+  opacity: 0;
+  animation: fade-in-up 0.5s ease-out forwards;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.3s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.4s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.5s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.6s; }
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FFF5EE;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #FFB6C1, #FF69B4);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #FF69B4, #C71585);
+}
+
+/* Music player styles */
+.music-player {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 182, 193, 0.3);
+}
+
+/* Button romantic gradient */
+.btn-romantic {
+  background: linear-gradient(135deg, #FF69B4 0%, #C71585 100%);
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.btn-romantic:hover {
+  background: linear-gradient(135deg, #FF1493 0%, #8B008B 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(199, 21, 133, 0.4);
+}
+
+/* Card hover effect */
+.card-romantic {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 182, 193, 0.2);
+}
+
+.card-romantic:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(255, 105, 180, 0.2);
+  border-color: rgba(255, 105, 180, 0.4);
+}
+
+/* No button runaway */
+.btn-runaway {
+  transition: all 0.15s ease-out;
+}
+
+/* Password input styling */
+.password-input {
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid #FFB6C1;
+  transition: all 0.3s ease;
+}
+
+.password-input:focus {
+  outline: none;
+  border-color: #FF69B4;
+  box-shadow: 0 0 15px rgba(255, 105, 180, 0.3);
+}
+
+/* Modal backdrop */
+.modal-backdrop {
+  backdrop-filter: blur(5px);
+}
