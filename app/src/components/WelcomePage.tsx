@@ -8,8 +8,7 @@ interface WelcomePageProps {
 export default function WelcomePage({ onYes }: WelcomePageProps) {
   const [hearts, setHearts] = useState<{ id: number; left: number; delay: number; size: number }[]>([]);
   const [showContent, setShowContent] = useState(false);
-  const [noButtonPos, setNoButtonPos] = useState({ x: 0, y: 0 });
-  const [isMoved, setIsMoved] = useState(false);
+  const [noButtonOffset, setNoButtonOffset] = useState({ x: 0, y: 0 });
   const noButtonRef = useRef<HTMLButtonElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -26,52 +25,44 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
     return () => clearTimeout(timer);
   }, []);
 
-  const moveButton = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      if (!noButtonRef.current) return;
+  const moveButton = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!noButtonRef.current) return;
 
-      const button = noButtonRef.current;
-      const rect = button.getBoundingClientRect();
+    const button = noButtonRef.current;
+    const rect = button.getBoundingClientRect();
 
-      const mouseX = e.clientX;
-      const mouseY = e.clientY;
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
 
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
 
-      const distance = Math.hypot(centerX - mouseX, centerY - mouseY);
+    const distance = Math.hypot(centerX - mouseX, centerY - mouseY);
 
-      // Hanya lari jika cursor sudah dekat
-      if (distance > 120) return;
+    // Hanya bergerak kalau cursor benar-benar dekat
+    if (distance > 140) return;
 
-      let dx = centerX - mouseX;
-      let dy = centerY - mouseY;
+    const dx = (centerX - mouseX) / (distance || 1);
+    const dy = (centerY - mouseY) / (distance || 1);
 
-      const length = Math.hypot(dx, dy) || 1;
+    const moveStep = 18 + Math.random() * 16; // kecil dan natural
+    const jitterX = (Math.random() - 0.5) * 10;
+    const jitterY = (Math.random() - 0.5) * 8;
 
-      dx /= length;
-      dy /= length;
+    const limitX = 90; // batas gerak horizontal
+    const limitY = 28; // batas gerak vertikal
 
-      const moveDistance = 120;
+    setNoButtonOffset((prev) => {
+      let nextX = prev.x + dx * moveStep + jitterX;
+      let nextY = prev.y + dy * moveStep + jitterY;
 
-      let nextX = noButtonPos.x + dx * moveDistance;
-      let nextY = noButtonPos.y + dy * moveDistance;
+      nextX = Math.max(-limitX, Math.min(limitX, nextX));
+      nextY = Math.max(-limitY, Math.min(limitY, nextY));
 
-      const maxX = window.innerWidth - rect.width - 20;
-      const maxY = window.innerHeight - rect.height - 20;
+      return { x: nextX, y: nextY };
+    });
+  }, []);
 
-      nextX = Math.max(-250, Math.min(nextX, maxX));
-      nextY = Math.max(-200, Math.min(nextY, maxY));
-
-      setNoButtonPos({
-        x: nextX,
-        y: nextY,
-      });
-
-      setIsMoved(true);
-    },
-    [noButtonPos]
-  );
   return (
     <div ref={containerRef} className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden px-4 py-8">
       {/* Floating hearts background */}
@@ -126,10 +117,12 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
           {/* No Button - Runs away */}
           <button
             ref={noButtonRef}
+            onMouseEnter={moveButton}
             onMouseMove={moveButton}
-            className="btn-runaway bg-gray-400 hover:bg-gray-500 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg cursor-not-allowed transition-transform duration-300 ease-out"
+            className="btn-runaway bg-gray-400 hover:bg-gray-500 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg cursor-not-allowed transition-transform duration-200 ease-out"
             style={{
-              transform: isMoved ? `translate(${noButtonPos.x}px, ${noButtonPos.y}px)` : 'translate(0px, 0px)',
+              transform: `translate(${noButtonOffset.x}px, ${noButtonOffset.y}px)`,
+              position: 'relative',
             }}
           >
             <img src="/images/GK.jpg" alt="Tidak" className="w-32 h-auto" />
