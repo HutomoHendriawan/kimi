@@ -82,7 +82,7 @@ export default function ThankYouPage() {
             <div className="text-center mb-8">
               <p className="text-gray-600 leading-relaxed text-sm md:text-base">
                 Selamat ulang tahun Shahnaz Nurfatima Ismaila a.k.a Sayangku. Semoga menjadi pribadi yang lebih baik, lebih dewasa, selain karirnya yang berkembang, dirinya juga ikut berkembang.
-                Semoga banyak duitnya, makin jago ngelola duit, ngehasilin duit lebih banyak, dan bermanfaat buat orang. Kenapa aku do'ain aku sendiri??? Karena ada cewe cantik yang bilang ke aku
+                Semoga AKU banyak duitnya, makin jago ngelola duit, ngehasilin duit lebih banyak, dan bermanfaat buat orang. Kenapa aku do'ain aku sendiri??? Karena ada cewe cantik yang bilang ke aku
                 kalau aku kaya, dia bakal seneng
               </p>
               <div className="mt-4 flex justify-center gap-1">
@@ -102,7 +102,7 @@ export default function ThankYouPage() {
                 <textarea
                   value={feedback}
                   onChange={(e) => setFeedback(e.target.value)}
-                  placeholder="Aku bikin ini luamaaa. Masa jawabnya 'makasih' doang -_- just tell me everything... I'm all ears"
+                  placeholder="What you think... I'm all ears"
                   rows={4}
                   className="w-full px-4 py-3 rounded-xl border-2 border-pink-200 focus:border-pink-400 focus:outline-none resize-none text-sm text-gray-700 bg-pink-50/50 transition-colors"
                 />
@@ -112,7 +112,7 @@ export default function ThankYouPage() {
                   className="w-full btn-romantic py-3 rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Send size={18} />
-                  Feedback kamu bakal otomatis kesend wa ku 😉
+                  Kirim ke WA 😉
                 </button>
               </form>
             ) : (
@@ -126,7 +126,9 @@ export default function ThankYouPage() {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-gray-400 text-xs mt-6">Dibuat dengan ❤️ khusus untukmu</p>
+        <p className="text-center text-gray-400 text-xs mt-6">
+          Dibuat dengan giat <span className="line-through">malas</span> khusus untukmu
+        </p>
       </div>
     </div>
   );
