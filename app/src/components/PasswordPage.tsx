@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
-import { Lock, Heart, Eye, EyeOff } from "lucide-react";
-import { CORRECT_PASSWORD } from "@/data/content";
+import { useState, useEffect } from 'react';
+import { Lock, Heart, Eye, EyeOff } from 'lucide-react';
+import { CORRECT_PASSWORD } from '@/data/content';
 
 interface PasswordPageProps {
   onCorrect: () => void;
 }
 
 export default function PasswordPage({ onCorrect }: PasswordPageProps) {
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [shake, setShake] = useState(false);
@@ -33,7 +33,7 @@ export default function PasswordPage({ onCorrect }: PasswordPageProps) {
       setTimeout(() => {
         setShake(false);
         setError(false);
-        setPassword("");
+        setPassword('');
       }, 1500);
     }
   };
@@ -51,14 +51,11 @@ export default function PasswordPage({ onCorrect }: PasswordPageProps) {
             animationDelay: `${heart.delay}s`,
           }}
         >
-          <Heart
-            size={heart.size}
-            className="text-pink-300 fill-pink-200 opacity-40"
-          />
+          <Heart size={heart.size} className="text-pink-300 fill-pink-200 opacity-40" />
         </div>
       ))}
 
-      <div className={`w-full max-w-md relative z-10 ${shake ? "animate-shake" : ""}`}>
+      <div className={`w-full max-w-md relative z-10 ${shake ? 'animate-shake' : ''}`}>
         <div className="bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-pink-200/50">
           {/* Lock Icon */}
           <div className="flex justify-center mb-6">
@@ -69,56 +66,39 @@ export default function PasswordPage({ onCorrect }: PasswordPageProps) {
 
           {/* Title */}
           <h1 className="text-3xl font-bold text-center mb-2 text-gray-800" style={{ fontFamily: "'Playfair Display', serif" }}>
-            Selamat Datang
+            HBD Maniezz
           </h1>
-          <p className="text-center text-gray-500 mb-8 text-sm">
-            Masukkan kode rahasia untuk melanjutkan
-          </p>
+          <p className="text-center text-gray-500 mb-8 text-sm">Masukkan kode rahasia untuk melanjutkan</p>
 
           {/* Password Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="relative">
               <input
-                type={showPassword ? "text" : "password"}
+                type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
                   setError(false);
                 }}
-                placeholder="Masukkan PIN..."
-                className={`w-full px-5 py-4 rounded-2xl password-input text-center text-lg tracking-widest ${
-                  error ? "border-red-400 bg-red-50" : ""
-                }`}
+                placeholder="Apa hayohh..."
+                className={`w-full px-5 py-4 rounded-2xl password-input text-center text-lg tracking-widest ${error ? 'border-red-400 bg-red-50' : ''}`}
                 maxLength={10}
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-pink-500 transition-colors"
-              >
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-pink-500 transition-colors">
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
 
-            {error && (
-              <p className="text-red-500 text-center text-sm animate-pulse">
-                Kode salah, coba lagi ya ❤️
-              </p>
-            )}
+            {error && <p className="text-red-500 text-center text-sm animate-pulse">Kode salah, coba lagi ya ❤️</p>}
 
-            <button
-              type="submit"
-              className="w-full btn-romantic py-4 rounded-2xl font-semibold text-lg flex items-center justify-center gap-2"
-            >
+            <button type="submit" className="w-full btn-romantic py-4 rounded-2xl font-semibold text-lg flex items-center justify-center gap-2">
               <Heart size={20} className="fill-white" />
               Buka
             </button>
           </form>
 
           {/* Hint */}
-          <p className="text-center text-gray-400 text-xs mt-6">
-            💕 Khusus untukmu sayangku 💕
-          </p>
+          <p className="text-center text-gray-400 text-xs mt-6">💕 Clue-nya adalah waktu di mana Tuhan menurunkan 1 jiwa cantik ke Bumi 💕</p>
         </div>
       </div>
 

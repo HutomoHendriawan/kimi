@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import { Heart } from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Heart } from 'lucide-react';
 
 interface WelcomePageProps {
   onYes: () => void;
@@ -63,16 +63,13 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
     newX = Math.max(20, Math.min(newX, maxX));
     newY = Math.max(20, Math.min(newY, maxY));
 
-    button.style.position = "absolute";
+    button.style.position = 'absolute';
     button.style.left = `${newX}px`;
     button.style.top = `${newY}px`;
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden px-4 py-8"
-    >
+    <div ref={containerRef} className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden px-4 py-8">
       {/* Floating hearts background */}
       {hearts.map((heart) => (
         <div
@@ -88,25 +85,14 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
         </div>
       ))}
 
-      <div
-        className={`w-full max-w-lg relative z-10 transition-all duration-1000 ${
-          showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-        }`}
-      >
+      <div className={`w-full max-w-lg relative z-10 transition-all duration-1000 ${showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         {/* Welcome Image */}
         <div className="relative mb-8 rounded-3xl overflow-hidden shadow-2xl">
-          <img
-            src="/images/welcome.jpg"
-            alt="Romantic Welcome"
-            className="w-full h-64 md:h-80 object-cover"
-          />
+          <img src="/images/Acha1.jpeg" alt="Romantic Welcome" className="w-full h-64 md:h-80 object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
           <div className="absolute bottom-4 left-0 right-0 text-center">
-            <h1
-              className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg"
-              style={{ fontFamily: "'Playfair Display', serif" }}
-            >
-              Untuk Kamu
+            <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg" style={{ fontFamily: "'Playfair Display', serif" }}>
+              Cantik BGT Gwehh
             </h1>
           </div>
         </div>
@@ -115,16 +101,13 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
         <div className="bg-white/90 backdrop-blur-lg rounded-3xl shadow-xl p-6 md:p-8 border border-pink-200/50 mb-8">
           <div className="text-center space-y-4">
             <Heart size={32} className="mx-auto text-pink-500 fill-pink-500 pulse-soft" />
-            <h2
-              className="text-xl md:text-2xl font-bold text-gray-800 shimmer-text"
-              style={{ fontFamily: "'Playfair Display', serif" }}
-            >
-              Mau lihat sesuatu yang spesial?
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800 shimmer-text" style={{ fontFamily: "'Playfair Display', serif" }}>
+              Will you be my future?
             </h2>
             <p className="text-gray-600 text-sm md:text-base leading-relaxed">
-              Aku sudah menyiapkan sesuatu yang indah untukmu.
+              Web ini dibuat dari akhir Maret pas aku pulang ke Sukabumi. Menghabiskan banyak waktu, kopi instan, dan 2 gelas ButterScotch.
               <br />
-              Kamu mau melihatnya?
+              Pengennya ngabisin banyak ButterSchotch tapi muahal cok 😭😭😭
             </p>
           </div>
         </div>
@@ -132,12 +115,8 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
         {/* Buttons */}
         <div className="flex justify-center items-center gap-6 relative min-h-[80px]">
           {/* Yes Button - Stays in place */}
-          <button
-            onClick={onYes}
-            className="btn-romantic px-10 py-4 rounded-2xl font-bold text-lg flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all"
-          >
-            <Heart size={20} className="fill-white" />
-            Ya
+          <button onClick={onYes} className="btn-romantic px-10 py-4 rounded-2xl font-bold text-lg flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all">
+            <img src="/images/Ya.jpeg" alt="Ya" className="w-32 h-auto" />
           </button>
 
           {/* No Button - Runs away */}
@@ -146,15 +125,13 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
             onMouseEnter={moveButton}
             onMouseMove={moveButton}
             className="btn-runaway bg-gray-400 hover:bg-gray-500 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg cursor-not-allowed"
-            style={{ position: "relative" }}
+            style={{ position: 'relative' }}
           >
-            Tidak
+            <img src="/images/GK.jpg" alt="Tidak" className="w-32 h-auto" />
           </button>
         </div>
 
-        <p className="text-center text-gray-400 text-xs mt-8">
-          Coba klik tombol "Tidak" kalau berani 😊
-        </p>
+        <p className="text-center text-gray-400 text-xs mt-8">Yakin pilih Gk? 😏😏</p>
       </div>
     </div>
   );
