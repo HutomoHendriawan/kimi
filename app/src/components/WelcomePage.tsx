@@ -25,49 +25,44 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
   }, []);
 
   const moveButton = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!noButtonRef.current) return;
-
     const button = noButtonRef.current;
-    const buttonRect = button.getBoundingClientRect();
+    if (!button) return;
+
+    const rect = button.getBoundingClientRect();
+
+    const margin = 12;
+    const step = 140 + Math.random() * 120;
+
+    const currentLeft = rect.left;
+    const currentTop = rect.top;
 
     const mouseX = e.clientX;
     const mouseY = e.clientY;
 
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
+    const centerX = currentLeft + rect.width / 2;
+    const centerY = currentTop + rect.height / 2;
 
-    const safeMargin = 16;
-    const moveDistance = 180 + Math.random() * 120;
+    let dx = centerX - mouseX;
+    let dy = centerY - mouseY;
 
-    const buttonCenterX = buttonRect.left + buttonRect.width / 2;
-    const buttonCenterY = buttonRect.top + buttonRect.height / 2;
+    const dist = Math.hypot(dx, dy) || 1;
+    dx /= dist;
+    dy /= dist;
 
-    let dx = buttonCenterX - mouseX;
-    let dy = buttonCenterY - mouseY;
-    let distance = Math.sqrt(dx * dx + dy * dy);
+    let nextLeft = currentLeft + dx * step;
+    let nextTop = currentTop + dy * step;
 
-    if (distance < 0.001) {
-      const angle = Math.random() * Math.PI * 2;
-      dx = Math.cos(angle);
-      dy = Math.sin(angle);
-      distance = 1;
-    }
+    const maxLeft = window.innerWidth - rect.width - margin;
+    const maxTop = window.innerHeight - rect.height - margin;
 
-    const unitX = dx / distance;
-    const unitY = dy / distance;
-
-    let newCenterX = mouseX + unitX * moveDistance;
-    let newCenterY = mouseY + unitY * moveDistance;
-
-    newCenterX = Math.max(safeMargin + buttonRect.width / 2, Math.min(newCenterX, viewportWidth - safeMargin - buttonRect.width / 2));
-
-    newCenterY = Math.max(safeMargin + buttonRect.height / 2, Math.min(newCenterY, viewportHeight - safeMargin - buttonRect.height / 2));
+    nextLeft = Math.max(margin, Math.min(nextLeft, maxLeft));
+    nextTop = Math.max(margin, Math.min(nextTop, maxTop));
 
     button.style.position = 'fixed';
-    button.style.left = `${newCenterX - buttonRect.width / 2}px`;
-    button.style.top = `${newCenterY - buttonRect.height / 2}px`;
+    button.style.left = `${nextLeft}px`;
+    button.style.top = `${nextTop}px`;
+    button.style.zIndex = '9999';
   }, []);
-
   return (
     <div ref={containerRef} className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden px-4 py-8">
       {/* Floating hearts background */}
@@ -125,7 +120,7 @@ export default function WelcomePage({ onYes }: WelcomePageProps) {
             onMouseEnter={moveButton}
             onMouseMove={moveButton}
             className="btn-runaway bg-gray-400 hover:bg-gray-500 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg cursor-not-allowed"
-            style={{ position: 'relative' }}
+            style={{ position: 'fixed', left: '0px', top: '0px' }}
           >
             <img src="/images/GK.jpg" alt="Tidak" className="w-32 h-auto" />
           </button>
