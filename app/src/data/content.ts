@@ -1,5 +1,5 @@
 // PASSWORD - Change this to your desired PIN/password
-export const CORRECT_PASSWORD = '2025';
+export const CORRECT_PASSWORD = '2005';
 
 // WhatsApp number for feedback (replace with your number)
 export const WHATSAPP_NUMBER = '6283870701573';
